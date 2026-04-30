@@ -1,0 +1,61 @@
+# Bytecode / cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Environment Pipenv / virtualenv
+.venv/
+venv/
+ENV/
+env/
+pip-wheel-metadata/
+
+# Pipenv (di solito NON si ignora il Pipfile e Pipfile.lock)
+# quindi li lasciamo versionati
+
+# Distribuzione / build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Logs
+*.log
+
+# Test / coverage
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+.nox/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# Environment variables (IMPORTANT: API keys ecc.)
+.env
+.env.*
+!.env.example
+
+# Secrets / local config
+config.local.*
+local_settings.py
+
+# Pip cache
+pip-wheel-metadata/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Output file
+results.txt
