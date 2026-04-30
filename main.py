@@ -1,8 +1,15 @@
+from datetime import datetime, timezone
+
 from api.odds import fetch_event_odds, fetch_events
 from utils.constants import LEAGUES
 from utils.helpers import save_results
 
 def find_arbitrage_opportunities(odds):
+    # If the event is live we can skip
+    commence_time = datetime.fromisoformat(odds["commence_time"])
+    if commence_time < datetime.now(timezone.utc):
+        return None
+
     # Extract bookmakers odds and if we have less than two bookmakers we can skip
     bookmakers = odds["bookmakers"]
     if len(bookmakers) < 2:
@@ -97,7 +104,7 @@ if __name__ == "__main__":
             events = fetch_events(league)
 
             # Iterate through each event
-            for event in events:
+            for event in events[:1]:
                 # Fetch h2h odds for the selected event
                 odds = fetch_event_odds(league, event["id"], "h2h")
 
