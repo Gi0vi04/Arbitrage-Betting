@@ -3,11 +3,14 @@ from utils.constants import LEAGUES
 from utils.helpers import save_results
 
 def find_arbitrage_opportunities(odds):
-    # Extract bookmakers odds
+    # Extract bookmakers odds and if we have less than two bookmakers we can skip
     bookmakers = odds["bookmakers"]
-    # If we have less than two bookmakers we can skip
     if len(bookmakers) < 2:
         return None
+    
+    # Extract home team and away team
+    home_team = odds["home_team"]
+    away_team = odds["away_team"]
 
     # Initialize best and second for home and away (price, index)
     best_home = (-1, None)
@@ -16,8 +19,19 @@ def find_arbitrage_opportunities(odds):
     second_away = (-1, None)
 
     for index, bookmaker in enumerate(bookmakers):
-        home = bookmaker["markets"][0]["outcomes"][0]["price"]
-        away = bookmaker["markets"][0]["outcomes"][1]["price"]
+        # Fetch the outcomes and skip if data are not available
+        outcomes = bookmaker["markets"][0]["outcomes"]
+
+        home = None
+        away = None
+        for o in outcomes:
+            if o["name"] == home_team:
+                home = o["price"]
+            elif o["name"] == away_team:
+                away = o["price"]
+
+        if home is None or away is None:
+            continue
 
         # Check if we should update best_home or second_home
         if home > best_home[0]:
