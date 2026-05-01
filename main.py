@@ -1,5 +1,6 @@
 import argparse
 import time
+import sys
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
@@ -156,10 +157,11 @@ Mode: {mode}""", end="\n\n")
 
             except Exception as e:
                 print(e)
-                break
+                sys.exit(1)
             
         sorted_results = sorted(results, key=lambda result: result["perc"], reverse=True)
         save_results(sorted_results, threshold, mode)
+        
         print("Execution completed")
 
         # Repeat the execution if needed
