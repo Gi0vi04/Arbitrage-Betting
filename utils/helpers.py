@@ -1,6 +1,10 @@
+from utils.dates import display_date, to_local
+
 def print_result(result):
+    timestamp = result["timestamp"]
+
     event = result["event"]
-    local_time = result["local_time"]
+    commence_time = result["commence_time"]
     is_live = result["is_live"]
     perc = result["perc"]
 
@@ -11,8 +15,10 @@ def print_result(result):
     away_price = result["away_price"]
 
     return f"""
+TIMESTAMP: {display_date(to_local(timestamp))}
+
 EVENT: {event}
-TIME: {local_time.strftime("%d/%m/%Y %H:%M")} ({"LIVE" if is_live else "NOT STARTED"})
+TIME: {display_date(to_local(commence_time))} ({"LIVE" if is_live else "NOT STARTED"})
 
 Profit: {perc:.4f}
 

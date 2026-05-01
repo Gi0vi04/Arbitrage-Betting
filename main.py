@@ -2,7 +2,6 @@ import argparse
 import time
 import sys
 from datetime import datetime, timezone
-from zoneinfo import ZoneInfo
 
 from api.odds import fetch_event_odds, fetch_events
 from utils.constants import LEAGUES
@@ -90,12 +89,12 @@ def find_arbitrage_opportunities(odds):
 
     # Extract commence_time information
     commence_time = datetime.fromisoformat(odds["commence_time"])
-    local_time = commence_time.astimezone(ZoneInfo("Europe/Rome"))
     is_live = commence_time < datetime.now(timezone.utc)
 
     return {
+        "timestamp": datetime.now(timezone.utc),
         "event": f"{odds["sport_title"]} | {odds["home_team"]} - {odds["away_team"]}",
-        "local_time": local_time,
+        "commence_time": commence_time,
         "is_live": is_live,
         "home_price": home_price,
         "away_price": away_price,
