@@ -24,3 +24,9 @@ Finally, run the script by providing your API key from [The Odds API](https://th
 ```
 API_KEY=<your-api-key> python main.py
 ```
+
+### Optional parameters
+It is possible to set these optional parameters:
+- ```--repeat <minutes>``` repeat the execution every ```<minutes>``` minutes
+- ```--threshold <value>``` to show only opportunities with profit greater than or equal to ```<value>```
+- ```--mode <append|overwrite>``` to choose whether to append results or overwrite the file
