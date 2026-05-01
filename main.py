@@ -1,15 +1,11 @@
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 from api.odds import fetch_event_odds, fetch_events
 from utils.constants import LEAGUES
 from utils.helpers import save_results
 
 def find_arbitrage_opportunities(odds):
-    # If the event is live we can skip
-    commence_time = datetime.fromisoformat(odds["commence_time"])
-    if commence_time < datetime.now(timezone.utc):
-        return None
-
     # Extract bookmakers odds and if we have less than two bookmakers we can skip
     bookmakers = odds["bookmakers"]
     if len(bookmakers) < 2:
@@ -85,8 +81,15 @@ def find_arbitrage_opportunities(odds):
             home_bookmaker = bookmakers[second_home[1]]["title"]
             away_bookmaker = bookmakers[best_away[1]]["title"]
 
+    # Extract commence_time information
+    commence_time = datetime.fromisoformat(odds["commence_time"])
+    local_time = commence_time.astimezone(ZoneInfo("Europe/Rome"))
+    is_live = commence_time < datetime.now(timezone.utc)
+
     return {
         "event": f"{odds["sport_title"]} | {odds["home_team"]} - {odds["away_team"]}",
+        "local_time": local_time,
+        "is_live": is_live,
         "home_price": home_price,
         "away_price": away_price,
         "home_bookmaker": home_bookmaker,

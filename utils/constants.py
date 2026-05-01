@@ -12,9 +12,14 @@ BOOKMAKERS = [
 ]
 LEAGUES = [
     "americanfootball_nfl",
+    "americanfootball_cfl",
+    "americanfootball_ufl",
+    "baseball_mlb",
+    "icehockey_nhl",
+    "icehockey_sweden_hockey_league",
+    "icehockey_sweden_allsvenskan",
     "basketball_nba",
     "basketball_euroleague",
-    "baseball_mlb",
-    "icehockey_nhl"
+    "tennis_atp_madrid_open",
 ];
 

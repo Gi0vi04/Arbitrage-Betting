@@ -1,5 +1,7 @@
 def print_result(result):
     event = result["event"]
+    local_time = result["local_time"]
+    is_live = result["is_live"]
     perc = result["perc"]
 
     home_bookmaker = result["home_bookmaker"]
@@ -10,6 +12,7 @@ def print_result(result):
 
     return f"""
 EVENT: {event}
+TIME: {local_time.strftime("%d/%m/%Y %H:%M")} ({"LIVE" if is_live else "NOT STARTED"})
 
 Profit: {perc:.4f}
 
