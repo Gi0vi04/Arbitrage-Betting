@@ -30,7 +30,14 @@ Stake percentage : {(1/away_price * 100):.2f}%
 
 """
 
-def save_results(results):
-    with open("results.txt", "w", encoding="utf-8") as f:
+def save_results(results, threshold, mode):
+    # If threshold is specified we filter the results
+    if threshold:
+        results = [result for result in results if result["perc"] >= threshold]
+    
+    # Normalize the file write mode
+    mode = "w" if mode == "overwrite" else "a"
+
+    with open("results.txt", mode, encoding="utf-8") as f:
         for result in results:
             f.write(print_result(result) + "\n")

@@ -1,3 +1,5 @@
+import argparse
+import time
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
@@ -102,27 +104,66 @@ def find_arbitrage_opportunities(odds):
     }
 
 if __name__ == "__main__":
-    results = []
-    
-    # Iterate through each league
-    for league in LEAGUES:
-        try:
-            # Fetch events for the selected league
-            events = fetch_events(league)
+    # Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--repeat",
+        type=int,
+        default=None,
+        help="Repeat the execution every <value> minutes"
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=None,
+        help="Filter opportunities with profit percentage greater than or equal to <value>"
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["append", "overwrite"],
+        default="overwrite",
+        help="File write mode: append to existing file or overwrite it"
+    )
 
-            # Iterate through each event
-            for event in events[:1]:
-                # Fetch h2h odds for the selected event
-                odds = fetch_event_odds(league, event["id"], "h2h")
+    args = parser.parse_args()
+    repeat = args.repeat
+    threshold = args.threshold
+    mode = args.mode
 
-                # Compare odds and get the results
-                result = find_arbitrage_opportunities(odds)
-                if result:
-                    results.append(result)
+    print(f"""Configuration:
+Repeat (minutes): {repeat}
+Threshold: {threshold}
+Mode: {mode}""", end="\n\n")
 
-        except Exception as e:
-            print(e)
+    while True:
+        results = []
+
+        # Iterate through each league
+        for league in LEAGUES:
+            try:
+                # Fetch events for the selected league
+                events = fetch_events(league)
+
+                # Iterate through each event
+                for event in events[:1]:
+                    # Fetch h2h odds for the selected event
+                    odds = fetch_event_odds(league, event["id"], "h2h")
+
+                    # Compare odds and get the results
+                    result = find_arbitrage_opportunities(odds)
+                    if result:
+                        results.append(result)
+
+            except Exception as e:
+                print(e)
+                break
+            
+        sorted_results = sorted(results, key=lambda result: result["perc"], reverse=True)
+        save_results(sorted_results, threshold, mode)
+        print("Execution completed")
+
+        # Repeat the execution if needed
+        if repeat:
+            time.sleep(repeat * 60)
+        else:
             break
-        
-    save_results(sorted(results, key=lambda result: result["perc"], reverse=True))
-    print("Calcolo terminato\n")
