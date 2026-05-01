@@ -22,8 +22,11 @@ def find_arbitrage_opportunities(odds):
     second_away = (-1, None)
 
     for index, bookmaker in enumerate(bookmakers):
-        # Fetch the outcomes and skip if data are not available
         outcomes = bookmaker["markets"][0]["outcomes"]
+        
+        # If the outcomes include the draw bet we can skip
+        if len(outcomes) > 2:
+            continue
 
         home = None
         away = None
@@ -33,6 +36,7 @@ def find_arbitrage_opportunities(odds):
             elif o["name"] == away_team:
                 away = o["price"]
 
+        # If data are not available we can skip
         if home is None or away is None:
             continue
 
