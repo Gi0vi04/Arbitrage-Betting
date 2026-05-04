@@ -26,7 +26,7 @@ def find_arbitrage_opportunities(odds):
     for index, bookmaker in enumerate(bookmakers):
         outcomes = bookmaker["markets"][0]["outcomes"]
         
-        # If the outcomes include the draw bet we can skip
+        # The outcome MUST have only two possible results
         if len(outcomes) > 2:
             continue
 
@@ -103,29 +103,7 @@ def find_arbitrage_opportunities(odds):
         "perc": 2 - ((1/home_price) + (1/away_price))
     }
 
-if __name__ == "__main__":
-    # Parse arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--repeat",
-        type=int,
-        default=None,
-        help="Repeat the execution every <value> minutes"
-    )
-    parser.add_argument(
-        "--threshold",
-        type=float,
-        default=None,
-        help="Filter opportunities with profit percentage greater than or equal to <value>"
-    )
-    parser.add_argument(
-        "--mode",
-        choices=["append", "overwrite"],
-        default="overwrite",
-        help="File write mode: append to existing file or overwrite it"
-    )
-
-    args = parser.parse_args()
+def main(args):
     repeat = args.repeat
     threshold = args.threshold
     mode = args.mode
@@ -134,7 +112,7 @@ if __name__ == "__main__":
 Repeat (minutes): {repeat}
 Threshold: {threshold}
 Mode: {mode}""", end="\n\n")
-
+    
     while True:
         results = []
 
@@ -168,3 +146,28 @@ Mode: {mode}""", end="\n\n")
             time.sleep(repeat * 60)
         else:
             break
+
+if __name__ == "__main__":
+    # Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--repeat",
+        type=int,
+        default=None,
+        help="Repeat the execution every <value> minutes"
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=None,
+        help="Filter opportunities with profit percentage greater than or equal to <value>"
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["append", "overwrite"],
+        default="overwrite",
+        help="File write mode: append to existing file or overwrite it"
+    )
+    args = parser.parse_args()
+
+    main(args)
